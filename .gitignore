@@ -8,6 +8,10 @@ test/run_test.sh
 test/*.tsv
 test/*.ipynb
 
+# Ignore nextflow logs and temp directory
+test/.nextflow/
+test/.nextflow.log*
+
 # Ignore test results and work directories (all contents recursively)
 test/results/
 test/work/
