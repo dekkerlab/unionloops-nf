@@ -1,0 +1,18 @@
+# Ignore Jupyter Notebook autosave checkpoints
+.ipynb_checkpoints/
+
+# Ignore test data and pipeline metadata
+test/data/
+test/pipeline_info/
+test/run_test.sh
+test/*.tsv
+test/*.ipynb
+
+# Ignore test results and work directories (all contents recursively)
+test/results/
+test/work/
+
+# Ignore LSF/Nextflow standard output and error files
+test/*.out
+test/*.err
+

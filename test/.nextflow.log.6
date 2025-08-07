@@ -1,0 +1,14 @@
+Aug-04 12:34:51.789 [main] DEBUG nextflow.cli.Launcher - $> nextflow run /home/jiangyuan.liu5-umw/unionloops.nf -profile cluster -ansi-log false --input_cooler_paths /home/jiangyuan.liu5-umw/test/test_cooler_paths.tsv --outfilename test_union_loop_list_10kb.tsv --conda_env /home/jiangyuan.liu5-umw/miniconda3/envs/unionloops-nf --nproc 4
+Aug-04 12:34:52.017 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 22.10.6
+Aug-04 12:34:52.045 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/jiangyuan.liu5-umw/.nextflow/plugins; core-plugins: nf-amazon@1.11.3,nf-azure@0.14.2,nf-codecommit@0.1.2,nf-console@1.0.4,nf-ga4gh@1.0.4,nf-google@1.4.5,nf-tower@1.5.6,nf-wave@0.5.3
+Aug-04 12:34:52.062 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Aug-04 12:34:52.063 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Aug-04 12:34:52.067 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Aug-04 12:34:52.078 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Aug-04 12:34:52.126 [main] DEBUG nextflow.scm.ProviderConfig - Using SCM config path: /home/jiangyuan.liu5-umw/.nextflow/scm
+Aug-04 12:34:52.140 [main] DEBUG nextflow.cli.Launcher - Operation aborted
+nextflow.exception.AbortOperationException: Cannot find script file: /home/jiangyuan.liu5-umw/unionloops.nf
+	at nextflow.cli.CmdRun.getScriptFile(CmdRun.groovy:448)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:300)
+	at nextflow.cli.Launcher.run(Launcher.groovy:487)
+	at nextflow.cli.Launcher.main(Launcher.groovy:646)

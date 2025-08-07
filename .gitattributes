@@ -1,0 +1,6 @@
+# Treat Nextflow (.nf) files as Groovy for GitHub syntax highlighting and language stats
+*.nf linguist-language=Groovy
+
+# Ignore Jupyter Notebook autosave checkpoints
+.ipynb_checkpoints/ linguist-vendored
+
