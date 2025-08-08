@@ -98,13 +98,13 @@ By default, output files will be saved in the `results/` directory relative to y
 
 ```
 results/
-├── enriched_pixels/               # Enriched pixels per dataset
+├── enriched_pixels/               # Enriched pixels per sample
 │   ├── sample1.enriched.pixels.resolution.10kb.tsv
 │   ├── sample2.enriched.pixels.resolution.10kb.tsv
 │   ├── sample3.enriched.pixels.resolution.10kb.tsv
 │   └── MEGA.enriched.pixels.resolution.10kb.tsv
 │
-├── clusters/                      # Clustering results of pooled enriched pixels across all datasets
+├── clusters/                      # Clustering results of pooled enriched pixels across all samples
 │   ├── centroids_of_clusters_of_enriched_pixels.resolution.10kb.tsv # Without additional filtering
 │   ├── clusters_of_enriched_pixels.resolution.10kb.tsv
 │   └── enriched_pixels_meta.tsv
@@ -122,7 +122,7 @@ results/
 | chr2         | Chromosome of anchor 2                          |
 | start2       | Start position of anchor 2                      |
 | end2         | End position of anchor 2                        |
-| sample\_name | Detected dataset(s); joined with `&` if multiple|
+| sample\_name | Detected sample(s); joined with `&` if multiple |
 | sample1      | Loop strength in sample1                        |
 | sample2      | Loop strength in sample2                        |
 | sample3      | Loop strength in sample3                        |
@@ -144,7 +144,7 @@ results/
 
 | Parameter                | Default       | Description                                                       |
 | ------------------------ | ------------- | ----------------------------------------------------------------- |
-| assembly\_name           | hg38          | Genome assembly used by `bioframe`                                |
+| assembly\_name           | hg38          | Genome assembly name from UCSC database                           |
 | resolution               | 10000         | Resolution for loop detection (bp)                                |
 | outdir                   | results       | Output directory                                                  |
 | custom\_config           | custom.config | Custom Nextflow config                                            |
