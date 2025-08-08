@@ -38,9 +38,15 @@ name	path
 sample1	/full/path/to/sample1.mcool
 sample2	/full/path/to/sample2.mcool
 sample3	/full/path/to/sample3.mcool
+MEGA	/full/path/to/MEGA.mcool    # Optional: merged high-resolution map
 ```
 
-> Recommended: Use `.mcool` files from **distiller v0.3.3** ([distiller-nf](https://github.com/open2c/distiller-nf))
+For optimal performance, also consider including a single merged `MEGA.mcool` file that combines all samples. The high signal-to-noise ratio of the MEGA map can:
+
+- Improve the rescue of **sample-specific** loops.
+- Enhance the **precision** of loop detection.
+
+> Use `.mcool` files generated from **distiller v0.3.3** ([distiller-nf](https://github.com/open2c/distiller-nf)) for best compatibility.
 
 ---
 
@@ -48,7 +54,7 @@ sample3	/full/path/to/sample3.mcool
 
 You can launch `unionloops` using different hardware profiles:
 
-### 1. Default hardware profile (`configs/local.config`) with your `mcool_paths.tsv` and conda env `unionloops-nf`:
+1. Default hardware profile (`configs/local.config`) with your `mcool_paths.tsv` and conda env `unionloops-nf`:
 
 ```bash
 nextflow run /full/path/to/unionloops-nf/unionloops.nf \
@@ -58,7 +64,7 @@ nextflow run /full/path/to/unionloops-nf/unionloops.nf \
     --conda_env /full/path/to/miniconda3/envs/unionloops-nf
 ```
 
-### 2. `cluster` hardware profile (`configs/cluster.config`) with your `mcool_paths.tsv` and conda env `unionloops-nf`:
+2. `cluster` hardware profile (`configs/cluster.config`) with your `mcool_paths.tsv` and conda env `unionloops-nf`:
 
 ```bash
 nextflow run /full/path/to/unionloops-nf/unionloops.nf \
@@ -69,7 +75,7 @@ nextflow run /full/path/to/unionloops-nf/unionloops.nf \
     --conda_env /full/path/to/miniconda3/envs/unionloops-nf
 ```
 
-### 3. `custom` hardware profile with your own configuration file with your `mcool_paths.tsv` and conda env `unionloops-nf`:
+3. `custom` hardware profile with your own configuration file with your `mcool_paths.tsv` and conda env `unionloops-nf`:
 
 ```bash
 nextflow run /full/path/to/unionloops-nf/unionloops.nf \
@@ -92,12 +98,13 @@ By default, output files will be saved in the `results/` directory relative to y
 
 ```
 results/
-├── enriched_pixels/               # Enriched pixels per sample
+├── enriched_pixels/               # Enriched pixels per dataset
 │   ├── sample1.enriched.pixels.resolution.10kb.tsv
 │   ├── sample2.enriched.pixels.resolution.10kb.tsv
-│   └── sample3.enriched.pixels.resolution.10kb.tsv
+│   ├── sample3.enriched.pixels.resolution.10kb.tsv
+│   └── MEGA.enriched.pixels.resolution.10kb.tsv
 │
-├── clusters/                      # Clustering results of pooled enriched pixels across all samples
+├── clusters/                      # Clustering results of pooled enriched pixels across all datasets
 │   ├── centroids_of_clusters_of_enriched_pixels.resolution.10kb.tsv # Without additional filtering
 │   ├── clusters_of_enriched_pixels.resolution.10kb.tsv
 │   └── enriched_pixels_meta.tsv
@@ -105,8 +112,7 @@ results/
 └── union_loop_list_10kb.tsv       # Final union list of loops
 ```
 
-### union\_loop\_list\_10kb.tsv columns
-This is an **example file** that lists chromatin loops detected across samples, aggregated into a single union set.
+### Columns in the dataframe of the final union list of loops
 
 | Column       | Description                                     |
 | ------------ | ----------------------------------------------- |
@@ -116,10 +122,11 @@ This is an **example file** that lists chromatin loops detected across samples, 
 | chr2         | Chromosome of anchor 2                          |
 | start2       | Start position of anchor 2                      |
 | end2         | End position of anchor 2                        |
-| sample\_name | Detected sample(s); joined with `&` if multiple |
+| sample\_name | Detected dataset(s); joined with `&` if multiple|
 | sample1      | Loop strength in sample1                        |
 | sample2      | Loop strength in sample2                        |
 | sample3      | Loop strength in sample3                        |
+| MEGA         | Loop strength in MEGA                           |
 
 ---
 
@@ -212,5 +219,9 @@ head results/test_union_loop_list.tsv
 
 - **bioframe**: Open2C et al. Bioframe: Operations on Genomic Intervals in Pandas Dataframes. Bioinformatics, 2024. [https://doi.org/10.1093/bioinformatics/btae088](https://doi.org/10.1093/bioinformatics/btae088)
 
+---
 
+## Methods paper (To Do)
+
+Title
 
