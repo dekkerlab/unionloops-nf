@@ -15,13 +15,41 @@ The `unionloops` pipeline provides:
 
 ## Setup
 
-### Step 1: Create conda environment for Nextflow
+### Step 1: Check Conda version and solver
+#### 1. Show the configured solver
+```bash
+# Check Conda version
+conda --version
+
+# Show current solver configuration ("classic" or "libmamba")
+conda config --show solver
+
+# Note: On older Conda versions, if nothing is printed, it defaults to "classic".
+# Make sure your current solver configuration is "libmamba", which is much faster than "classic".
+```
+
+#### 2. Update Conda to the latest version
+```bash
+# Example: Update to Conda v25.7.0 and force reinstall in the base environment
+conda install -n base -c defaults conda=25.7.0 --force-reinstall
+```
+
+#### 3. Double-check versions and solver
+```bash
+# Verify Conda version after update
+conda --version
+
+# Check solver again (default on modern Conda is "libmamba")
+conda config --show solver
+```
+
+### Step 2: Create conda environment for Nextflow
 
 ```bash
 conda env create -f nextflow_env.yml
 ```
 
-### Step 2: Create conda environment for `unionloops` pipeline
+### Step 3: Create conda environment for `unionloops` pipeline
 
 ```bash
 conda env create -f unionloops_env.yml
@@ -179,31 +207,33 @@ results/
 
 ### Run the pipeline using test data
 
+#### Step 1: Clone this repository and change to the test directory
 ```bash
-# Clone this repository
-git clone https://github.com/dekkerlab/unionloops-nf.git
-cd unionloops-nf
+$ git clone https://github.com/dekkerlab/unionloops-nf.git
+$ cd unionloops-nf/test/
+```
 
-# Change to the test directory
-cd test/
+#### Step 2: Download two test `.mcool` files to `test/data/` and generate a `test_mcool_paths.tsv` file under `test/`
+```bash
+$ bash ./run_download.sh
+```
 
-# Download two test .mcool files and generate their test_mcool_paths.tsv
-# Note: You might need to replace source ~/.bashrc with the appropriate
-# command to load Conda, depending on your shell configuration.
-bash ./run_download.sh
+#### Step 3: Run the pipeline with the downloaded test data
+```bash
+$ nextflow run ../unionloops.nf \
+>  -ansi-log false \
+>  --input_cooler_paths /full/path/to/test/test_mcool_paths.tsv \
+>  --outfilename test_union_loop_list.tsv \
+>  --conda_env ~/miniconda3/envs/unionloops-nf
+```
+**Note:** You might need to replace `~/miniconda3/envs/unionloops-nf` with the path to your `unionloops-nf` conda environment. You can find it by running:
+```bash
+$ conda env list | grep 'unionloops-nf'
+```
 
-# Activate the Nextflow conda environment
-conda activate nextflow
-
-# Run the pipeline with the downloaded test data
-nextflow run ../unionloops.nf \
-  -ansi-log false \                          # Disable ANSI color logging
-  --input_cooler_paths ./test_mcool_paths.tsv \  # Input: TSV of .mcool file paths
-  --outfilename test_union_loop_list.tsv \   # Output: result filename
-  --conda_env ~/miniconda3/envs/unionloops-nf # Path to the unionloops-nf conda environment
-
-# Take a look at the final union list of loops
-head results/test_union_loop_list.tsv
+#### Step 4: Take a look at the final union list of loops
+```bash
+$ head results/test_union_loop_list.tsv
 ```
 
 ---
