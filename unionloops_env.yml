@@ -5,14 +5,11 @@ channels:
   - defaults
 dependencies:
   - python=3.9
-  - pip
-  - numpy
+  - numpy<2
+  - cython<3
   - pandas
-  - r-essentials
+  - cooler=0.9.3
+  - cooltools=0.6.1
+  - bioframe=0.7.0
   - r-base
-  - r-dplyr
-  - r-stringr
-  - pip:
-      - cooler==0.9.3
-      - cooltools==0.6.1
-      - bioframe==0.4.1
+  - r-essentials
