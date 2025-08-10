@@ -192,6 +192,9 @@ cd test/
 # command to load Conda, depending on your shell configuration.
 bash ./run_download.sh
 
+# Activate the Nextflow conda environment
+conda activate nextflow
+
 # Run the pipeline with the downloaded test data
 nextflow run ../unionloops.nf \
   -ansi-log false \                          # Disable ANSI color logging
