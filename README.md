@@ -226,6 +226,7 @@ $ conda env list | grep 'unionloops-nf'
 ```
 ##### Option 1: Run it using the `local` hardware profile (`configs/local.config`).
 ```bash
+$ conda activate nextflow
 $ nextflow run ../unionloops.nf \
 >  -ansi-log false \
 >  --input_cooler_paths /full/path/to/test/test_mcool_paths.tsv \
