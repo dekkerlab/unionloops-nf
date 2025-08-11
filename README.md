@@ -15,7 +15,7 @@ The `unionloops` pipeline provides:
 
 ## Setup
 
-### Step 1: Check Conda version and solver
+### Step 1: Check your Conda version and solver
 #### 1. Show the configured solver
 ```bash
 # Check Conda version
@@ -219,6 +219,8 @@ $ bash ./run_download.sh
 ```
 
 #### Step 3: Run the pipeline with the downloaded test data
+Please be patient, for this test example the Nextflow pipeline may take up to 10 minutes to complete.
+
 ```bash
 $ nextflow run ../unionloops.nf \
 >  -ansi-log false \
@@ -226,6 +228,7 @@ $ nextflow run ../unionloops.nf \
 >  --outfilename test_union_loop_list.tsv \
 >  --conda_env ~/miniconda3/envs/unionloops-nf
 ```
+
 **Note:** You might need to replace `~/miniconda3/envs/unionloops-nf` with the path to your `unionloops-nf` conda environment. You can find it by running:
 ```bash
 $ conda env list | grep 'unionloops-nf'
