@@ -213,26 +213,60 @@ $ git clone https://github.com/dekkerlab/unionloops-nf.git
 $ cd unionloops-nf/test/
 ```
 
-#### Step 2: Download two test `.mcool` files to `test/data/` and generate a `test_mcool_paths.tsv` file under `test/`
+#### Step 2: Download two test `.mcool` files to `test/data/` and generate a `test_mcool_paths.tsv` file in `test/`
 ```bash
 $ bash ./run_download.sh
 ```
 
 #### Step 3: Run the pipeline with the downloaded test data
-Please be patient, for this test example the Nextflow pipeline may take up to 10 minutes to complete.
-
+Please be patient, for this test example the Nextflow pipeline may take up to 10 minutes to complete.<br>
+**Note:** You might need to replace `~/miniconda3/envs/unionloops-nf` with the path to your `unionloops-nf` conda environment. You can find it by running:
 ```bash
-$ conda activate nextflow
+$ conda env list | grep 'unionloops-nf'
+```
+##### Option 1: Run it using the `local` hardware profile (`configs/local.config`).
+```bash
 $ nextflow run ../unionloops.nf \
 >  -ansi-log false \
 >  --input_cooler_paths /full/path/to/test/test_mcool_paths.tsv \
 >  --outfilename test_union_loop_list.tsv \
 >  --conda_env ~/miniconda3/envs/unionloops-nf
 ```
-
-**Note:** You might need to replace `~/miniconda3/envs/unionloops-nf` with the path to your `unionloops-nf` conda environment. You can find it by running:
+##### Option 2: Run it using the `cluster` hardware profile (`configs/cluster.config`).
+1. Update the provided LSF job script `test/run_test_example.sh` with the necessary path adjustments:
 ```bash
-$ conda env list | grep 'unionloops-nf'
+#BSUB -q short
+#BSUB -W 4:00
+#BSUB -n 2
+#BSUB -J unionloops-nf
+#BSUB -R "span[hosts=1]"
+#BSUB -R "rusage[mem=8000]"
+#BSUB -eo dis.err
+#BSUB -oo dis.out
+
+# Load environment
+if [ -f "$HOME/.bashrc" ]; then
+    source "$HOME/.bashrc"
+elif [ -f "$HOME/.bash_profile" ]; then
+    source "$HOME/.bash_profile"
+fi
+
+# Activate nextflow conda environment
+conda activate nextflow
+
+# Run Nextflow
+nextflow run /full/path/to/unionloops-nf/unionloops.nf \
+        -profile cluster \
+        -ansi-log false \
+        --input_cooler_paths /full/path/to/unionloops-nf/test/test_mcool_paths.tsv \
+        --outfilename test_union_loop_list_10kb.tsv \
+        --conda_env ~/miniconda3/envs/unionloops-nf \
+        --nproc 2
+```
+
+2. Submit the job from the `test/` directory
+```bash
+bsub < run_test_example.sh
 ```
 
 #### Step 4: Take a look at the final union list of loops
