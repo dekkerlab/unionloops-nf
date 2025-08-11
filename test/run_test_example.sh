@@ -22,6 +22,6 @@ nextflow run /full/path/to/unionloops-nf/unionloops.nf \
         -profile cluster \
         -ansi-log false \
         --input_cooler_paths /full/path/to/unionloops-nf/test/test_mcool_paths.tsv \
-        --outfilename test_union_loop_list_10kb.tsv \
+        --outfilename test_union_loop_list.tsv \
         --conda_env ~/miniconda3/envs/unionloops-nf \
         --nproc 2
