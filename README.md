@@ -222,6 +222,7 @@ $ bash ./run_download.sh
 Please be patient, for this test example the Nextflow pipeline may take up to 10 minutes to complete.
 
 ```bash
+$ conda activate nextflow
 $ nextflow run ../unionloops.nf \
 >  -ansi-log false \
 >  --input_cooler_paths /full/path/to/test/test_mcool_paths.tsv \
