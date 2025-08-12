@@ -18,6 +18,11 @@ required_params.each { p ->
     }
 }
 
+// Check input cooler resolution
+if ((params.resolution as int) < 4000) {
+    error "Provided cooler has resolution ${params.resolution} bases. Current version only supports >= 4000."
+}
+
 
 // === Now it's safe to use them ===
 log.info """\

@@ -173,7 +173,7 @@ results/
 | Parameter                | Default       | Description                                                       |
 | ------------------------ | ------------- | ----------------------------------------------------------------- |
 | assembly\_name           | hg38          | Genome assembly name from UCSC database                           |
-| resolution               | 10000         | Resolution for loop detection (bp)                                |
+| resolution               | 10000         | Resolution for loop detection (bp), must be ≥ 4000                |
 | outdir                   | results       | Output directory                                                  |
 | custom\_config           | custom.config | Custom Nextflow config                                            |
 | clr\_weight\_name        | weight        | Used by cooltools functions                                       |
