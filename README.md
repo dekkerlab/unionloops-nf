@@ -291,9 +291,4 @@ $ head results/test_union_loop_list.tsv
 
 - **bioframe**: Open2C et al. Bioframe: Operations on Genomic Intervals in Pandas Dataframes. Bioinformatics, 2024. [https://doi.org/10.1093/bioinformatics/btae088](https://doi.org/10.1093/bioinformatics/btae088)
 
----
-
-## Methods paper (To Do)
-
-Title
 
