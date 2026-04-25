@@ -32,10 +32,8 @@ def quantify_loops(mtx):
 
 def quantify_individual_loops_in_stack(stack):
     loop_strength=np.array([])
-    for loop_idx in np.arange(stack.shape[0]):
-        # Note: for cooltools v0.6.1 in environment.yml of nf pipeline, output of cooltools.pileup: [num_snippet_stack,num_rows_of_one_snippet,num_columns_of_one_snippet]
-        # for cooltools v0.5.2, output of cooltools.pileup: [num_rows_of_one_snippet,num_columns_of_one_snippet,num_snippet_stack]
-        loop_strength=np.append(loop_strength, quantify_loops(stack[loop_idx,:,:]))
+    for loop_idx in np.arange(stack.shape[-1]):
+        loop_strength=np.append(loop_strength, quantify_loops(stack[:,:,loop_idx]))
     return loop_strength
 
 

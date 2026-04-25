@@ -9,7 +9,7 @@ dependencies:
   - cython<3
   - pandas
   - cooler=0.9.3
-  - cooltools=0.6.1
-  - bioframe=0.7.0
+  - cooltools=0.5.2
+  - bioframe=0.3.3
   - r-base
   - r-essentials
