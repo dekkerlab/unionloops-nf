@@ -19,13 +19,19 @@ required_params.each { p ->
 }
 
 // Check input cooler resolution
-if ((params.resolution as int) < 4000) {
-    error "Provided cooler has resolution ${params.resolution} bases. Current version only supports >= 4000."
+// Users can provide their own external loop lists (bedpe) with the same resolution (any resolutions, e.g., 1kb);
+// otherwise, current version of HiCCUPS only supports >= 4000bp
+if (params.input_loop_paths == null) {
+    if ((params.resolution as int) < 4000) {
+        error "Provided cooler has resolution ${params.resolution} bases. Current version of HiCCUPS only supports >= 4000."
+    }
 }
 
 
 // === Now it's safe to use them ===
-log.info """\
+if (params.input_loop_paths == null) {
+
+    log.info """\
     U N I O N L O O P S - N F   P I P E L I N E
     ===========================================
     active_profile         : ${workflow.profile}
@@ -45,7 +51,31 @@ log.info """\
     tile_size              : ${params.tile_size}
     nproc                  : ${params.nproc}
     """
-    .stripIndent().trim()
+    .stripIndent()
+    .trim()
+
+} else {
+
+    log.info """\
+    U N I O N L O O P S - N F   P I P E L I N E
+    ===========================================
+    active_profile         : ${workflow.profile}
+    cooler_paths           : ${params.input_cooler_paths}
+    external_loop_paths    : ${params.input_loop_paths}
+    assembly               : ${params.assembly_name}
+    resolution             : ${params.resolution}
+    flank                  : ${params.flank}
+    dots_clustering_radius : ${params.dots_clustering_radius}
+    nf_path                : ${projectDir}
+    conda_env              : ${params.conda_env}
+    outdir                 : ${params.outdir}
+    outfilename            : ${params.outfilename}
+    clr_weight_name        : ${params.clr_weight_name}
+    nproc                  : ${params.nproc}
+    """
+    .stripIndent()
+    .trim()
+}
 
 
 process generate_enriched_pixels {
@@ -158,6 +188,29 @@ process combine_loop_strength {
     """
 }
 
+process cluster_external_loops {
+    publishDir params.outdir, mode:'copy'
+    
+    input:
+    path input_cooler_paths
+    path input_loop_paths
+    val resolution
+    val flank
+    val clr_weight_name
+    val assembly_name
+    val dots_clustering_radius
+    val outfilename
+    val nproc
+
+    output:
+    path '*'
+
+    script:
+    """
+    python ${projectDir}/scripts/cluster_external_loops.py $input_cooler_paths $input_loop_paths $resolution $flank $clr_weight_name $assembly_name $dots_clustering_radius $outfilename $nproc
+    """
+}
+
 referenceFile = new FileReader(params.input_cooler_paths)
 coolers = referenceFile.collect { it.split(/\t/) }.inject([:]) { map, val -> map[val[0]] = val[1]; map }
 coolers.remove('name')
@@ -165,17 +218,75 @@ def name = coolers.collect{entry -> entry.key}
 def path = coolers.collect{entry -> entry.value}
 
 workflow {
-    name_ch = Channel.fromList(name)
-    path_ch = Channel.fromList(path)
-    enriched_pixels_ch = generate_enriched_pixels(name_ch, path_ch, params.assembly_name, params.resolution, params.clr_weight_name, params.max_loci_separation, params.max_nans_tolerated, params.lambda_bin_fdr, params.tile_size, params.nproc)
-    clusters_ch = cluster_enriched_pixels(params.input_cooler_paths, path_ch.collect(), enriched_pixels_ch.collect(), params.assembly_name, params.resolution, params.dots_clustering_radius)
-    union_list_ch = singleton_filtering(enriched_pixels_ch.collect(), clusters_ch, params.resolution)
-    loop_strength_ch=calculate_loop_strength(name_ch, params.input_cooler_paths, union_list_ch, path_ch, params.resolution, params.flank, params.assembly_name, params.clr_weight_name, params.nproc)
-    combine_loop_strength(params.input_cooler_paths, loop_strength_ch.collect(), params.resolution, params.outfilename)
+
+    if (params.input_loop_paths) {
+
+        cluster_external_loops(
+            params.input_cooler_paths,
+            params.input_loop_paths,
+            params.resolution,
+            params.flank,
+            params.clr_weight_name,
+            params.assembly_name,
+            params.dots_clustering_radius,
+            params.outfilename,
+            params.nproc
+        )
+
+    } else {
+
+        name_ch = Channel.fromList(name)
+        path_ch = Channel.fromList(path)
+
+        enriched_pixels_ch = generate_enriched_pixels(
+            name_ch,
+            path_ch,
+            params.assembly_name,
+            params.resolution,
+            params.clr_weight_name,
+            params.max_loci_separation,
+            params.max_nans_tolerated,
+            params.lambda_bin_fdr,
+            params.tile_size,
+            params.nproc
+        )
+
+        clusters_ch = cluster_enriched_pixels(
+            params.input_cooler_paths,
+            path_ch.collect(),
+            enriched_pixels_ch.collect(),
+            params.assembly_name,
+            params.resolution,
+            params.dots_clustering_radius
+        )
+
+        union_list_ch = singleton_filtering(
+            enriched_pixels_ch.collect(),
+            clusters_ch,
+            params.resolution
+        )
+
+        loop_strength_ch = calculate_loop_strength(
+            name_ch,
+            params.input_cooler_paths,
+            union_list_ch,
+            path_ch,
+            params.resolution,
+            params.flank,
+            params.assembly_name,
+            params.clr_weight_name,
+            params.nproc
+        )
+
+        combine_loop_strength(
+            params.input_cooler_paths,
+            loop_strength_ch.collect(),
+            params.resolution,
+            params.outfilename
+        )
+    }
 }
 
 workflow.onComplete {
     log.info ( workflow.success ? "\nDone! Open the final tsv file of union loops --> $params.outdir/$params.outfilename\n" : "Oops .. something went wrong" )
 }
-
-
