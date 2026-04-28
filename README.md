@@ -1,5 +1,7 @@
 # unionloops-nf
 
+[![DOI](https://zenodo.org/badge/1034146326.svg)](https://doi.org/10.5281/zenodo.19837477)
+
 **Nextflow Version:** 22.10.6
 
 ### A HiCCUPS-based pipeline for simultaneous chromatin loop calling and cross-sample comparison, where both steps reinforce each other.
